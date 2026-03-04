@@ -1,0 +1,11 @@
+## How it works
+
+The execution flow:
+
+user command
+→ disposable container created
+→ command executed
+→ logs captured
+→ container destroyed
+
+The host machine is never exposed to the executed script.
