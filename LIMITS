@@ -1,0 +1,10 @@
+## Execution limits
+
+To prevent abuse:
+
+- execution timeout
+- memory limits
+- CPU limits
+- log size cap
+
+Containers are destroyed after execution.
