@@ -4,31 +4,308 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pricing - Disposable Exec</title>
+  <meta name="description" content="Pricing for Disposable Exec, a hosted sandbox API for AI agents and LLM tools." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121933;
+      --soft: #1a2345;
+      --text: #e8ecf8;
+      --muted: #a8b0c7;
+      --line: #263153;
+      --primary: #6ea8fe;
+      --primary-hover: #8db9ff;
+      --green: #73d13d;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0b1020 0%, #0e1428 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: var(--primary-hover);
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .nav {
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(11,16,32,0.75);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+
+    .hero {
+      padding: 64px 0 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 44px;
+      letter-spacing: -1px;
+    }
+
+    .lead {
+      color: var(--muted);
+      max-width: 760px;
+      margin: 0 auto 0;
+      font-size: 18px;
+    }
+
+    .pricing {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      padding: 32px 0 18px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(18,25,51,0.95) 0%, rgba(15,21,42,0.95) 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    }
+
+    .highlight {
+      border-color: rgba(115,209,61,0.35);
+      box-shadow: 0 12px 42px rgba(30,70,20,0.18);
+    }
+
+    .pill {
+      display: inline-block;
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(115,209,61,0.13);
+      border: 1px solid rgba(115,209,61,0.28);
+      color: #dff7c6;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .price {
+      font-size: 38px;
+      font-weight: 800;
+      margin: 10px 0;
+    }
+
+    .price span {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .desc {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 14px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+    }
+
+    li {
+      padding: 10px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      color: #d7ddef;
+      font-size: 15px;
+    }
+
+    li:first-child {
+      border-top: none;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      border-color: transparent;
+      color: #081124;
+    }
+
+    .btn.primary:hover {
+      color: #081124;
+    }
+
+    .section {
+      padding: 18px 0 46px;
+    }
+
+    .box {
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      padding: 22px;
+      color: var(--muted);
+    }
+
+    .footer {
+      padding: 16px 0 48px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 920px) {
+      .pricing {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Pricing</h1>
-  <table border="1" cellpadding="8" cellspacing="0">
-    <tr>
-      <th>Plan</th>
-      <th>Price</th>
-      <th>Quota</th>
-    </tr>
-    <tr>
-      <td>Starter</td>
-      <td>$9/month</td>
-      <td>3,000 executions</td>
-    </tr>
-    <tr>
-      <td>Pro</td>
-      <td>$29/month</td>
-      <td>20,000 executions</td>
-    </tr>
-    <tr>
-      <td>Scale</td>
-      <td>$99/month</td>
-      <td>100,000 executions</td>
-    </tr>
-  </table>
-  <p><a href="./index.html">Back to home</a></p>
+  <header class="nav">
+    <div class="container nav-inner">
+      <div class="brand">Disposable Exec</div>
+      <nav class="nav-links">
+        <a href="./index.html">Home</a>
+        <a href="./terms.html">Terms</a>
+        <a href="./privacy.html">Privacy</a>
+        <a href="./refund.html">Refund</a>
+        <a href="https://github.com/DevBunny-exe/disposable-exec" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Simple pricing for hosted code execution</h1>
+      <p class="lead">
+        Monthly plans for solo builders, agent workflows, and production usage.
+      </p>
+    </section>
+
+    <section class="pricing">
+      <div class="card">
+        <h2>Starter</h2>
+        <div class="price">$9 <span>/ month</span></div>
+        <div class="desc">Best for solo builders and early prototypes.</div>
+        <ul>
+          <li>3,000 executions / month</li>
+          <li>Hosted execution API</li>
+          <li>Structured output</li>
+          <li>Email support</li>
+        </ul>
+        <a class="btn" href="./index.html">Get started</a>
+      </div>
+
+      <div class="card highlight">
+        <div class="pill">Most practical</div>
+        <h2>Pro</h2>
+        <div class="price">$29 <span>/ month</span></div>
+        <div class="desc">Best for active agent workloads and real usage.</div>
+        <ul>
+          <li>20,000 executions / month</li>
+          <li>Hosted execution API</li>
+          <li>Structured output</li>
+          <li>Priority support</li>
+        </ul>
+        <a class="btn primary" href="./index.html">Choose Pro</a>
+      </div>
+
+      <div class="card">
+        <h2>Scale</h2>
+        <div class="price">$99 <span>/ month</span></div>
+        <div class="desc">Best for production teams and higher-volume usage.</div>
+        <ul>
+          <li>100,000 executions / month</li>
+          <li>Hosted execution API</li>
+          <li>Structured output</li>
+          <li>Higher usage capacity</li>
+        </ul>
+        <a class="btn" href="./index.html">Contact via launch flow</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="box">
+        <strong style="color:#fff;">Notes</strong>
+        <p>
+          All plans are intended for short-lived code execution workloads.
+          Abuse prevention, usage limits, and service rules apply.
+          For policy details, please review our <a href="./terms.html">Terms of Service</a>,
+          <a href="./privacy.html">Privacy Policy</a>, and
+          <a href="./refund.html">Refund Policy</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div>Disposable Exec</div>
+      <div class="footer-links">
+        <a href="./index.html">Home</a>
+        <a href="./terms.html">Terms of Service</a>
+        <a href="./privacy.html">Privacy Policy</a>
+        <a href="./refund.html">Refund Policy</a>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
