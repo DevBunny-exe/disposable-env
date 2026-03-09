@@ -1,25 +1,14 @@
-import subprocess
-import resource
-import tempfile
-import os
 import time
 
 from disposable_exec.logs import write_log
 from disposable_exec.queue import dequeue_job
 from disposable_exec.results import save_result
 from disposable_exec.status import set_status
-
-
-def set_limits():
-    resource.setrlimit(resource.RLIMIT_CPU, (2, 2))
-
-    memory_limit = 128 * 1024 * 1024
-    resource.setrlimit(resource.RLIMIT_AS, (memory_limit, memory_limit))
-
-    resource.setrlimit(resource.RLIMIT_NPROC, (10, 10))
+from disposable_exec.runtime import run_script_in_docker
 
 
 print("Worker started...")
+
 
 while True:
     job = dequeue_job()
@@ -34,45 +23,25 @@ while True:
 
     set_status(execution_id, "running")
 
-    path = None
-
     try:
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".py") as f:
-            f.write(code.encode())
-            path = f.name
-
-        start = time.time()
-
-        result = subprocess.run(
-            ["python", path],
-            capture_output=True,
-            text=True,
-            timeout=10,
-            preexec_fn=set_limits
-        )
-
-        duration = time.time() - start
+        output = run_script_in_docker(code, timeout=10)
 
         write_log(
             execution_id,
             key_id,
-            result.stdout,
-            result.stderr,
-            result.returncode,
-            duration
+            output["stdout"],
+            output["stderr"],
+            output["exit_code"],
+            output["duration"]
         )
 
-        save_result(
-            execution_id,
-            {
-                "stdout": result.stdout,
-                "stderr": result.stderr,
-                "exit_code": result.returncode,
-                "duration": duration
-            }
-        )
+        save_result(execution_id, output)
 
-        set_status(execution_id, "finished")
+        if output["exit_code"] == -1:
+            set_status(execution_id, "failed")
+        else:
+            set_status(execution_id, "finished")
+
         print("Job finished")
 
     except Exception as e:
@@ -87,7 +56,3 @@ while True:
                 "duration": 0
             }
         )
-
-    finally:
-        if path and os.path.exists(path):
-            os.remove(path)
