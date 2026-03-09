@@ -1,6 +1,6 @@
 import os
 
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
 
 from .auth import create_api_key, disable_api_key, verify_api_key
 from .billing import (
@@ -9,6 +9,7 @@ from .billing import (
     handle_paddle_webhook,
     handle_polar_webhook,
     handle_stripe_webhook,
+    validate_webhook_secret,
 )
 from .db import get_conn
 from .plans import get_plan_quota
@@ -48,6 +49,12 @@ def verify_admin_token(x_admin_token: str = Header(default=None)):
         raise HTTPException(status_code=403, detail="Invalid admin token")
 
     return True
+
+
+def verify_webhook_secret(provider: str, secret_value: str | None):
+    ok, error = validate_webhook_secret(provider, secret_value)
+    if not ok:
+        raise HTTPException(status_code=403, detail=error)
 
 
 @app.get("/")
@@ -250,20 +257,52 @@ def admin_subscriptions(admin=Depends(verify_admin_token)):
 
 
 @app.post("/billing/webhook/paddle")
-def billing_webhook_paddle(payload: dict):
-    return handle_paddle_webhook(payload)
+async def billing_webhook_paddle(
+    request: Request,
+    x_webhook_secret: str | None = Header(default=None),
+):
+    verify_webhook_secret("paddle", x_webhook_secret)
+    payload = await request.json()
+    result = handle_paddle_webhook(payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "Invalid webhook payload"))
+    return result
 
 
 @app.post("/billing/webhook/lemon")
-def billing_webhook_lemon(payload: dict):
-    return handle_lemon_webhook(payload)
+async def billing_webhook_lemon(
+    request: Request,
+    x_webhook_secret: str | None = Header(default=None),
+):
+    verify_webhook_secret("lemon", x_webhook_secret)
+    payload = await request.json()
+    result = handle_lemon_webhook(payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "Invalid webhook payload"))
+    return result
 
 
 @app.post("/billing/webhook/polar")
-def billing_webhook_polar(payload: dict):
-    return handle_polar_webhook(payload)
+async def billing_webhook_polar(
+    request: Request,
+    x_webhook_secret: str | None = Header(default=None),
+):
+    verify_webhook_secret("polar", x_webhook_secret)
+    payload = await request.json()
+    result = handle_polar_webhook(payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "Invalid webhook payload"))
+    return result
 
 
 @app.post("/billing/webhook/stripe")
-def billing_webhook_stripe(payload: dict):
-    return handle_stripe_webhook(payload)
+async def billing_webhook_stripe(
+    request: Request,
+    x_webhook_secret: str | None = Header(default=None),
+):
+    verify_webhook_secret("stripe", x_webhook_secret)
+    payload = await request.json()
+    result = handle_stripe_webhook(payload)
+    if not result.get("ok"):
+        raise HTTPException(status_code=400, detail=result.get("error", "Invalid webhook payload"))
+    return result

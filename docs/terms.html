@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Terms of Service - Disposable Exec</title>
+  <title>Terms of Service — Disposable Exec</title>
   <meta name="description" content="Terms of Service for Disposable Exec." />
   <style>
     :root {
@@ -21,7 +21,7 @@
       background: linear-gradient(180deg, #0b1020 0%, #0e1428 100%);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.75;
+      line-height: 1.7;
     }
     a { color: var(--primary); text-decoration: none; }
     .container { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
@@ -30,102 +30,102 @@
       border-bottom: 1px solid rgba(255,255,255,0.06);
       background: rgba(11,16,32,0.75);
     }
-    .nav-links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; }
-    .content {
-      padding: 52px 0;
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
     }
-    h1 { font-size: 38px; margin: 0 0 14px; }
-    h2 { margin-top: 34px; font-size: 22px; }
-    p, li { color: var(--muted); }
-    .panel {
+    .brand { font-size: 20px; font-weight: 700; color: #fff; }
+    .nav-links { display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; }
+    .hero { padding: 56px 0 24px; }
+    h1 { margin: 0 0 10px; font-size: 40px; }
+    .lead { color: var(--muted); }
+    .card {
       background: var(--panel);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 18px;
-      padding: 28px;
+      padding: 24px;
+      margin: 18px 0;
     }
-    ul { padding-left: 18px; }
+    h2 { margin-top: 0; font-size: 22px; }
+    .footer { padding: 20px 0 48px; color: var(--muted); font-size: 14px; }
   </style>
 </head>
 <body>
-  <header class="nav">
-    <div class="container nav-links">
-      <a href="./index.html">Home</a>
-      <a href="./pricing.html">Pricing</a>
-      <a href="./privacy.html">Privacy</a>
-      <a href="./refund.html">Refund</a>
+  <div class="nav">
+    <div class="container nav-inner">
+      <div class="brand">Disposable Exec</div>
+      <div class="nav-links">
+        <a href="./index.html">Home</a>
+        <a href="./pricing.html">Pricing</a>
+        <a href="./terms.html">Terms</a>
+        <a href="./privacy.html">Privacy</a>
+        <a href="./refund.html">Refund</a>
+      </div>
     </div>
-  </header>
+  </div>
 
-  <main class="container content">
-    <div class="panel">
+  <div class="container">
+    <div class="hero">
       <h1>Terms of Service</h1>
-      <p><strong>Effective date:</strong> March 8, 2026</p>
-      <p>
-        These Terms of Service govern your use of Disposable Exec, a hosted code execution service for AI agents, automations, and developer tools.
-      </p>
-
-      <h2>1. Service</h2>
-      <p>
-        Disposable Exec provides hosted code execution infrastructure for short-lived execution tasks. The service may include APIs, SDKs, usage limits, and operational controls intended to maintain platform stability and security.
-      </p>
-
-      <h2>2. Acceptable Use</h2>
-      <p>You agree not to use the service for:</p>
-      <ul>
-        <li>Illegal, harmful, abusive, or fraudulent activity</li>
-        <li>Malware, unauthorized access attempts, or service disruption</li>
-        <li>Workloads intended to exhaust system resources or bypass platform restrictions</li>
-        <li>Activity that violates applicable law or third-party rights</li>
-      </ul>
-
-      <h2>3. Accounts and Access</h2>
-      <p>
-        Access may require an API key, subscription, or other account credentials. You are responsible for maintaining the confidentiality of your credentials and for activity performed using your account.
-      </p>
-
-      <h2>4. Usage Limits</h2>
-      <p>
-        Plans may include execution limits, rate limits, and other operational restrictions. We may enforce limits or suspend access to protect system reliability, security, and fair usage across customers.
-      </p>
-
-      <h2>5. Suspension and Termination</h2>
-      <p>
-        We may suspend or terminate access to the service if we reasonably believe your use poses operational, legal, billing, or security risk, or if you violate these terms.
-      </p>
-
-      <h2>6. Availability</h2>
-      <p>
-        The service is provided on an as-is and as-available basis. We do not guarantee uninterrupted availability, error-free operation, or fitness for a particular purpose.
-      </p>
-
-      <h2>7. Billing</h2>
-      <p>
-        Paid plans are billed according to the pricing presented at the time of purchase. Subscription, renewal, cancellation, and refund handling may be managed through an authorized billing provider.
-      </p>
-
-      <h2>8. Liability</h2>
-      <p>
-        To the maximum extent permitted by law, Disposable Exec will not be liable for indirect, incidental, special, consequential, or exemplary damages arising from your use of the service.
-      </p>
-
-      <h2>9. Changes</h2>
-      <p>
-        We may update these terms from time to time. Continued use of the service after updated terms are published constitutes acceptance of those changes.
-      </p>
-      
-      <h2>10. Subscription and Cancellation</h2>
-      <p>        
-        Paid subscriptions may renew automatically unless cancelled before the next billing cycle.
-        You may cancel future renewals at any time. Cancellation does not automatically entitle you to a refund for the current billing period unless otherwise required by law or stated in our Refund Policy.
-      </p>
-
-      <h2>11. Contact</h2>
-      <p>
-        For support or legal inquiries related to these Terms of Service, contact: devbunny.exe@gmail.com
-      </p>
-      
-      </p>
+      <div class="lead">Last updated: 2026-03-09</div>
     </div>
-  </main>
+
+    <div class="card">
+      <h2>1. Service scope</h2>
+      <p>Disposable Exec provides a hosted API for short-lived Python execution inside a restricted sandbox environment. The service is intended for AI agents, automations, and developer products that need remote execution of short tasks.</p>
+    </div>
+
+    <div class="card">
+      <h2>2. Acceptable use</h2>
+      <p>You may not use the service for illegal activity, malware delivery, unauthorized access attempts, abuse of third-party systems, cryptocurrency mining, denial-of-service activity, or long-running compute workloads outside the intended product scope.</p>
+    </div>
+
+    <div class="card">
+      <h2>3. Service limitations</h2>
+      <p>The service is designed for short-lived workloads only. Execution limits, rate limits, sandbox restrictions, and quota enforcement may apply. We may suspend or restrict abusive usage that threatens system stability, security, or fair access for other users.</p>
+    </div>
+
+    <div class="card">
+      <h2>4. Accounts, API keys, and security</h2>
+      <p>You are responsible for keeping your API keys and related credentials secure. You must not share access in a way that enables abuse, unauthorized usage, or attempts to bypass quota, billing, or security controls.</p>
+    </div>
+
+    <div class="card">
+      <h2>5. Billing and subscriptions</h2>
+      <p>Paid plans are billed based on the plan and execution quota shown at the time of purchase. Subscription status may affect service access. If a subscription is canceled, paused, or becomes past due, execution access may be restricted or disabled.</p>
+    </div>
+
+    <div class="card">
+      <h2>6. No guarantee of uninterrupted service</h2>
+      <p>Disposable Exec is provided on an as-available basis. We do not guarantee uninterrupted availability, zero downtime, or suitability for safety-critical, life-critical, or high-liability workloads.</p>
+    </div>
+
+    <div class="card">
+      <h2>7. Sandbox and execution risks</h2>
+      <p>Although the service uses a restricted execution environment, no sandbox should be treated as a perfect guarantee. Users remain responsible for how they use the service, the code they submit, and the downstream consequences of outputs generated by their tools or agents.</p>
+    </div>
+
+    <div class="card">
+      <h2>8. Changes to the service</h2>
+      <p>We may change pricing, quotas, features, limits, or service behavior over time. Material changes will be reflected in updated product pages or documentation.</p>
+    </div>
+
+    <div class="card">
+      <h2>9. Termination</h2>
+      <p>We may suspend or terminate access for abuse, non-payment, security risk, or violations of these terms. You may stop using the service at any time.</p>
+    </div>
+
+    <div class="card">
+      <h2>10. Contact</h2>
+      <p>For service or billing questions, contact: <a href="mailto:devbunny.exe@gmail.com">devbunny.exe@gmail.com</a></p>
+    </div>
+
+    <div class="footer">
+      Disposable Exec — hosted short-lived code execution for AI tools.
+    </div>
+  </div>
 </body>
 </html>

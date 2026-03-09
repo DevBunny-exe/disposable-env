@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Refund Policy - Disposable Exec</title>
+  <title>Refund Policy — Disposable Exec</title>
   <meta name="description" content="Refund Policy for Disposable Exec." />
   <style>
     :root {
@@ -21,7 +21,7 @@
       background: linear-gradient(180deg, #0b1020 0%, #0e1428 100%);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.75;
+      line-height: 1.7;
     }
     a { color: var(--primary); text-decoration: none; }
     .container { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
@@ -30,70 +30,77 @@
       border-bottom: 1px solid rgba(255,255,255,0.06);
       background: rgba(11,16,32,0.75);
     }
-    .nav-links { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; }
-    .content { padding: 52px 0; }
-    h1 { font-size: 38px; margin: 0 0 14px; }
-    h2 { margin-top: 34px; font-size: 22px; }
-    p, li { color: var(--muted); }
-    .panel {
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .brand { font-size: 20px; font-weight: 700; color: #fff; }
+    .nav-links { display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; }
+    .hero { padding: 56px 0 24px; }
+    h1 { margin: 0 0 10px; font-size: 40px; }
+    .lead { color: var(--muted); }
+    .card {
       background: var(--panel);
       border: 1px solid rgba(255,255,255,0.06);
       border-radius: 18px;
-      padding: 28px;
+      padding: 24px;
+      margin: 18px 0;
     }
-    ul { padding-left: 18px; }
+    h2 { margin-top: 0; font-size: 22px; }
+    .footer { padding: 20px 0 48px; color: var(--muted); font-size: 14px; }
   </style>
 </head>
 <body>
-  <header class="nav">
-    <div class="container nav-links">
-      <a href="./index.html">Home</a>
-      <a href="./pricing.html">Pricing</a>
-      <a href="./terms.html">Terms</a>
-      <a href="./privacy.html">Privacy</a>
+  <div class="nav">
+    <div class="container nav-inner">
+      <div class="brand">Disposable Exec</div>
+      <div class="nav-links">
+        <a href="./index.html">Home</a>
+        <a href="./pricing.html">Pricing</a>
+        <a href="./terms.html">Terms</a>
+        <a href="./privacy.html">Privacy</a>
+        <a href="./refund.html">Refund</a>
+      </div>
     </div>
-  </header>
+  </div>
 
-  <main class="container content">
-    <div class="panel">
+  <div class="container">
+    <div class="hero">
       <h1>Refund Policy</h1>
-      <p><strong>Effective date:</strong> March 8, 2026</p>
-      <p>
-        Refund requests are reviewed on a case-by-case basis.
-      </p>
-
-      <h2>1. Eligible Refunds</h2>
-      <p>
-        A refund may be considered if the service is materially unavailable, not delivered as described, or subject to a verified billing error.
-      </p>
-
-      <h2>2. Time Window</h2>
-      <p>
-        Customers should submit refund requests within 7 days of the original charge unless otherwise required by applicable law.
-      </p>
-      
-      <p>
-        Cancellation of a subscription prevents future renewal charges but does not automatically create a right to a refund for the current billing period.
-      </p>
-      
-      <h2>3. Non-Refundable Cases</h2>
-      <ul>
-        <li>Normal usage consumption under an active plan</li>
-        <li>Change of mind after purchase</li>
-        <li>Violations of service terms or abuse of the platform</li>
-        <li>Failure to use the service after access has been provided</li>
-      </ul>
-
-      <h2>4. Billing Providers</h2>
-      <p>
-        Refund handling may be processed through the authorized billing provider used for your purchase. Provider rules and payment processor requirements may also apply.
-      </p>
-
-      <h2>5. Contact</h2>
-      <p>
-        If you need support regarding a billing issue, contact: devbunny.exe@gmail.com
-      </p>
+      <div class="lead">Last updated: 2026-03-09</div>
     </div>
-  </main>
+
+    <div class="card">
+      <h2>1. General policy</h2>
+      <p>Because Disposable Exec is a software service with immediate access to hosted infrastructure and execution capacity, payments are generally non-refundable once a billing period begins, except where required by law or where we determine a refund is appropriate.</p>
+    </div>
+
+    <div class="card">
+      <h2>2. Duplicate or accidental charges</h2>
+      <p>If you believe you were charged incorrectly, charged multiple times, or charged after a technical billing error, contact us and we will review the case.</p>
+    </div>
+
+    <div class="card">
+      <h2>3. Service failure review</h2>
+      <p>If the service was materially unavailable or failed in a way that made the paid plan unusable, we may review refund or credit requests on a case-by-case basis.</p>
+    </div>
+
+    <div class="card">
+      <h2>4. Abuse and violations</h2>
+      <p>Accounts suspended or terminated for abuse, policy violations, or attempts to bypass system controls are generally not eligible for refunds.</p>
+    </div>
+
+    <div class="card">
+      <h2>5. Contact</h2>
+      <p>For billing or refund questions, contact: <a href="mailto:devbunny.exe@gmail.com">devbunny.exe@gmail.com</a></p>
+    </div>
+
+    <div class="footer">
+      Disposable Exec — hosted short-lived code execution for AI tools.
+    </div>
+  </div>
 </body>
 </html>
