@@ -24,7 +24,10 @@ app = FastAPI(title="Disposable Exec API")
 
 RUN_RATE_LIMIT_PER_MIN = 20
 READ_RATE_LIMIT_PER_MIN = 60
-ADMIN_TOKEN = os.getenv("DISPOSABLE_EXEC_ADMIN_TOKEN", "").strip()
+
+
+def get_admin_token() -> str:
+    return os.getenv("DISPOSABLE_EXEC_ADMIN_TOKEN", "").strip()
 
 
 def enforce_rate_limit(api_key: dict, route: str, limit: int):
@@ -41,11 +44,13 @@ def enforce_rate_limit(api_key: dict, route: str, limit: int):
         )
 
 
-def verify_admin_token(x_admin_token: str = Header(default=None)):
-    if not ADMIN_TOKEN:
+def verify_admin_token(x_admin_token: str | None = Header(default=None)):
+    admin_token = get_admin_token()
+
+    if not admin_token:
         raise HTTPException(status_code=500, detail="Admin token is not configured")
 
-    if x_admin_token != ADMIN_TOKEN:
+    if x_admin_token != admin_token:
         raise HTTPException(status_code=403, detail="Invalid admin token")
 
     return True

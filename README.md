@@ -24,12 +24,12 @@ Disposable Exec is not:
 
 ## Core value
 
-Disposable Exec is useful because it reduces:
+Disposable Exec reduces:
 
 - sandbox setup work
 - Docker/runtime maintenance work
 - API key and quota implementation work
-- basic billing integration work
+- subscription and billing skeleton work
 - operational risk of running AI-generated code directly on your own host
 
 ## Current capabilities
@@ -49,6 +49,7 @@ Disposable Exec is useful because it reduces:
 - API key create/list/disable
 - Basic rate limiting
 - Billing webhook abstraction
+- Admin-protected subscription inspection
 
 ## Current architecture
 
@@ -170,28 +171,70 @@ These routes normalize provider events into a shared internal subscription model
 docker build -t disposable-exec-sandbox -f Dockerfile.sandbox .
 ```
 
-### 2. Start Redis
+### 2. Prepare environment file
+
+Copy the example file:
 
 ```bash
-redis-server --daemonize yes
+cp .env.example .env
 ```
 
-### 3. Configure environment variables
+Then edit `.env` and set real values for:
+
+- `DISPOSABLE_EXEC_ADMIN_TOKEN`
+- `DISPOSABLE_EXEC_PADDLE_WEBHOOK_SECRET`
+- `DISPOSABLE_EXEC_LEMON_WEBHOOK_SECRET`
+- `DISPOSABLE_EXEC_POLAR_WEBHOOK_SECRET`
+- `DISPOSABLE_EXEC_STRIPE_WEBHOOK_SECRET`
+
+### 3. Start Redis
 
 ```bash
-export DISPOSABLE_EXEC_ADMIN_TOKEN="replace-this-with-a-real-secret"
+bash scripts/start_redis.sh
+```
+
+You can also run the Redis bootstrap helper first:
+
+```bash
+bash scripts/start_all.sh
+```
+
+Then start the API server and worker in separate terminals:
+
+```bash
+bash scripts/start_server.sh
+bash scripts/start_worker.sh
 ```
 
 ### 4. Start the API server
 
 ```bash
-python3 -m uvicorn disposable_exec.server:app --host 0.0.0.0 --port 8000
+bash scripts/start_server.sh
 ```
 
 ### 5. Start the worker
 
 ```bash
-python3 -m disposable_exec.worker
+bash scripts/start_worker.sh
+```
+
+## Production-style startup order
+
+For a minimal production-like run:
+
+1. Build sandbox image
+2. Prepare `.env`
+3. Start Redis
+4. Start API server
+5. Start worker
+
+Recommended startup order:
+
+```text
+Docker sandbox image
+→ Redis
+→ FastAPI server
+→ Worker
 ```
 
 ## Example request
@@ -207,7 +250,16 @@ curl -X POST http://127.0.0.1:8000/run \
 
 ```bash
 curl -H "X-Admin-Token: YOUR_REAL_ADMIN_TOKEN" \
-http://127.0.0.1:8000/admin/users
+http://127.0.0.1:8000/admin/subscriptions
+```
+
+## Example webhook request
+
+```bash
+curl -X POST http://127.0.0.1:8000/billing/webhook/paddle \
+  -H "Content-Type: application/json" \
+  -H "X-Webhook-Secret: YOUR_PADDLE_WEBHOOK_SECRET" \
+  -d '{"user_id":"user_001","subscription_id":"sub_001","plan":"Pro","status":"active"}'
 ```
 
 ## Current storage model
@@ -223,6 +275,29 @@ Stored in SQLite:
 - execution_status
 - execution_results
 - rate_limits
+
+Current local storage directory:
+
+- `storage/app.db`
+- `storage/execution_logs.jsonl`
+
+## Environment variables
+
+Main required environment variables:
+
+- `DISPOSABLE_EXEC_ADMIN_TOKEN`
+- `DISPOSABLE_EXEC_PADDLE_WEBHOOK_SECRET`
+- `DISPOSABLE_EXEC_LEMON_WEBHOOK_SECRET`
+- `DISPOSABLE_EXEC_POLAR_WEBHOOK_SECRET`
+- `DISPOSABLE_EXEC_STRIPE_WEBHOOK_SECRET`
+
+Optional runtime variables:
+
+- `DISPOSABLE_EXEC_HOST`
+- `DISPOSABLE_EXEC_PORT`
+- `DISPOSABLE_EXEC_REDIS_HOST`
+- `DISPOSABLE_EXEC_REDIS_PORT`
+- `DISPOSABLE_EXEC_SANDBOX_IMAGE`
 
 ## Security notes
 
@@ -242,7 +317,7 @@ This project should still be treated as an early hosted execution skeleton, not 
 
 ## Current project stage
 
-Disposable Exec is no longer in the "0 to 1 idea stage".
+Disposable Exec is no longer in the 0 to 1 idea stage.
 
 Current stage:
 
@@ -252,14 +327,29 @@ Current stage:
 - deployment preparation
 - docs and distribution preparation
 
+## Current validated areas
+
+Validated so far:
+
+- admin token protection
+- webhook secret gate
+- webhook subscription writes
+- active subscription enforcement
+- canceled subscription enforcement
+- past_due subscription enforcement
+- paused subscription enforcement
+- plan quota switching
+- `/me` subscription visibility
+
 ## Current priorities
 
 High priority:
 
-- webhook signature verification
-- final subscription enforcement validation
-- deployment setup
-- docs/examples cleanup
+- stable startup flow
+- deployment cleanup
+- log and storage path cleanup
+- production run documentation
+- webhook signature verification upgrade
 
 Later:
 
