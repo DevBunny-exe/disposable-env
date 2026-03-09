@@ -1,16 +1,15 @@
 import json
 import time
-import uuid
-import os
+from pathlib import Path
 
-LOG_FILE = "execution_logs.jsonl"
+BASE_DIR = Path(__file__).resolve().parent
+LOG_FILE = BASE_DIR / "storage" / "execution_logs.jsonl"
 
 
-def write_log(api_key, stdout, stderr, exit_code, duration):
-
+def write_log(execution_id, key_id, stdout, stderr, exit_code, duration):
     log = {
-        "execution_id": str(uuid.uuid4()),
-        "api_key": api_key,
+        "execution_id": execution_id,
+        "key_id": key_id,
         "timestamp": int(time.time()),
         "stdout": stdout,
         "stderr": stderr,
@@ -18,5 +17,5 @@ def write_log(api_key, stdout, stderr, exit_code, duration):
         "duration": duration
     }
 
-    with open(LOG_FILE, "a") as f:
+    with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write(json.dumps(log) + "\n")
