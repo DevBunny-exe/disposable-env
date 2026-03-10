@@ -1,4 +1,5 @@
 import os
+import uuid
 from datetime import datetime
 from typing import Any
 
@@ -60,6 +61,13 @@ def normalize_status(status: str | None) -> str:
     return result
 
 
+def normalize_email(email: str | None) -> str | None:
+    if not email:
+        return None
+    value = str(email).strip().lower()
+    return value or None
+
+
 def extract_user_id(payload: dict[str, Any]) -> str | None:
     candidates = [
         payload.get("user_id"),
@@ -78,13 +86,40 @@ def extract_user_id(payload: dict[str, Any]) -> str | None:
     return None
 
 
+def extract_email(payload: dict[str, Any]) -> str | None:
+    data = payload.get("data") if isinstance(payload.get("data"), dict) else {}
+    attrs = data.get("attributes") if isinstance(data.get("attributes"), dict) else {}
+    customer = payload.get("customer") if isinstance(payload.get("customer"), dict) else {}
+
+    candidates = [
+        payload.get("email"),
+        payload.get("customer_email"),
+        payload.get("customerEmail"),
+        customer.get("email"),
+        payload.get("user", {}).get("email") if isinstance(payload.get("user"), dict) else None,
+        payload.get("meta", {}).get("email") if isinstance(payload.get("meta"), dict) else None,
+        payload.get("metadata", {}).get("email") if isinstance(payload.get("metadata"), dict) else None,
+        payload.get("custom_data", {}).get("email") if isinstance(payload.get("custom_data"), dict) else None,
+        attrs.get("email"),
+        attrs.get("customer_email"),
+    ]
+
+    for value in candidates:
+        normalized = normalize_email(value)
+        if normalized:
+            return normalized
+    return None
+
+
 def extract_provider_subscription_id(payload: dict[str, Any]) -> str | None:
+    data = payload.get("data") if isinstance(payload.get("data"), dict) else {}
+
     candidates = [
         payload.get("subscription_id"),
         payload.get("subscriptionId"),
         payload.get("id"),
-        payload.get("data", {}).get("id") if isinstance(payload.get("data"), dict) else None,
-        payload.get("data", {}).get("subscription_id") if isinstance(payload.get("data"), dict) else None,
+        data.get("id"),
+        data.get("subscription_id"),
     ]
     for value in candidates:
         if value:
@@ -93,15 +128,16 @@ def extract_provider_subscription_id(payload: dict[str, Any]) -> str | None:
 
 
 def extract_plan(payload: dict[str, Any]) -> str:
+    data = payload.get("data") if isinstance(payload.get("data"), dict) else {}
+    attrs = data.get("attributes") if isinstance(data.get("attributes"), dict) else {}
+
     candidates = [
         payload.get("plan"),
         payload.get("plan_name"),
         payload.get("variant_name"),
         payload.get("product_name"),
-        payload.get("data", {}).get("plan") if isinstance(payload.get("data"), dict) else None,
-        payload.get("data", {}).get("attributes", {}).get("plan")
-        if isinstance(payload.get("data"), dict) and isinstance(payload.get("data").get("attributes"), dict)
-        else None,
+        data.get("plan"),
+        attrs.get("plan"),
         payload.get("meta", {}).get("plan") if isinstance(payload.get("meta"), dict) else None,
         payload.get("metadata", {}).get("plan") if isinstance(payload.get("metadata"), dict) else None,
         payload.get("custom_data", {}).get("plan") if isinstance(payload.get("custom_data"), dict) else None,
@@ -113,13 +149,14 @@ def extract_plan(payload: dict[str, Any]) -> str:
 
 
 def extract_status(payload: dict[str, Any]) -> str:
+    data = payload.get("data") if isinstance(payload.get("data"), dict) else {}
+    attrs = data.get("attributes") if isinstance(data.get("attributes"), dict) else {}
+
     candidates = [
         payload.get("status"),
         payload.get("subscription_status"),
-        payload.get("data", {}).get("status") if isinstance(payload.get("data"), dict) else None,
-        payload.get("data", {}).get("attributes", {}).get("status")
-        if isinstance(payload.get("data"), dict) and isinstance(payload.get("data").get("attributes"), dict)
-        else None,
+        data.get("status"),
+        attrs.get("status"),
     ]
     for value in candidates:
         if value:
@@ -152,6 +189,35 @@ def extract_period_end(payload: dict[str, Any]) -> str | None:
         if value:
             return str(value)
     return None
+
+
+def find_or_create_user_by_email(email: str) -> str:
+    email = normalize_email(email)
+    if not email:
+        raise ValueError("email is required")
+
+    conn = get_conn()
+    row = conn.execute(
+        "SELECT id FROM users WHERE lower(email) = ?",
+        (email,),
+    ).fetchone()
+
+    if row:
+        user_id = row["id"]
+        conn.close()
+        return user_id
+
+    user_id = f"user_{uuid.uuid4().hex[:12]}"
+    conn.execute(
+        """
+        INSERT INTO users (id, email, status, created_at)
+        VALUES (?, ?, ?, ?)
+        """,
+        (user_id, email, "active", now_iso()),
+    )
+    conn.commit()
+    conn.close()
+    return user_id
 
 
 def sync_api_keys_plan_for_user(user_id: str, plan: str):
@@ -301,7 +367,12 @@ def validate_webhook_secret(provider: str, provided_secret: str | None):
 def process_subscription_webhook(provider: str, payload: dict[str, Any]):
     user_id = extract_user_id(payload)
     if not user_id:
-        return {"ok": False, "error": "missing user_id"}
+        email = extract_email(payload)
+        if email:
+            user_id = find_or_create_user_by_email(email)
+
+    if not user_id:
+        return {"ok": False, "error": "missing user_id_or_email"}
 
     provider_subscription_id = extract_provider_subscription_id(payload)
     if not provider_subscription_id:

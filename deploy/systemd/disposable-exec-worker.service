@@ -1,0 +1,16 @@
+[Unit]
+Description=Disposable Exec Worker
+After=network.target redis-server.service docker.service disposable-exec-api.service
+Requires=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/disposable-exec/app
+EnvironmentFile=/opt/disposable-exec/app/.env
+ExecStart=/opt/disposable-exec/app/.venv/bin/python -m disposable_exec.worker
+Restart=always
+RestartSec=3
+User=root
+
+[Install]
+WantedBy=multi-user.target

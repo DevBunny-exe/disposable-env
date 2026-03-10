@@ -1,20 +1,13 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT_DIR"
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+./scripts/start_redis.sh
 
-echo "[Disposable Exec] Starting Redis..."
-bash "$ROOT_DIR/scripts/start_redis.sh"
+nohup ./scripts/start_server.sh > /tmp/disposable-exec-api.log 2>&1 &
+nohup ./scripts/start_worker.sh > /tmp/disposable-exec-worker.log 2>&1 &
 
-echo "[Disposable Exec] Starting API server in a new terminal/session manually:"
-echo "  bash $ROOT_DIR/scripts/start_server.sh"
-
-echo "[Disposable Exec] Starting worker in a new terminal/session manually:"
-echo "  bash $ROOT_DIR/scripts/start_worker.sh"
-
-echo
-echo "[Disposable Exec] Recommended terminal layout:"
-echo "  Terminal 1 -> bash $ROOT_DIR/scripts/start_server.sh"
-echo "  Terminal 2 -> bash $ROOT_DIR/scripts/start_worker.sh"
-echo
-echo "[Disposable Exec] Redis start step completed."
+echo "API log: /tmp/disposable-exec-api.log"
+echo "Worker log: /tmp/disposable-exec-worker.log"
+echo "Started redis + api + worker"
